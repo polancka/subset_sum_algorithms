@@ -4,15 +4,6 @@ from collections import deque
 from tabulate import tabulate
 
 
-# Read the input from a file
-def read_input(filename):
-    with open(filename, 'r') as f:
-        lines = list(map(str.strip, f.readlines()))
-        n = int(lines[0])
-        k = int(lines[1])
-        a = list(map(int, lines[2:2+n]))
-        return n, k, a
-    
 def subset_sum_bellman(n, k, a):
     dp = [[0] * (k + 1) for _ in range(n + 1)]
 
