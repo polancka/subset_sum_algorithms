@@ -4,6 +4,15 @@ from collections import deque
 from tabulate import tabulate
 
 
+# Read the input from a file
+def read_input(filename):
+    with open(filename, 'r') as f:
+        lines = list(map(str.strip, f.readlines()))
+        n = int(lines[0])
+        k = int(lines[1])
+        a = list(map(int, lines[2:2+n]))
+        return n, k, a
+
 def subset_sum_bellman(n, k, a):
     dp = [[0] * (k + 1) for _ in range(n + 1)]
 
@@ -79,26 +88,33 @@ def subset_sum_fptas(n, k, a, epsilon):
 
 # Run test cases
 def run_tests():
-    test_folder = "test"
-    for i in range(1, 6):
-        filepath = os.path.join(test_folder, f"SS{i}.txt")
+    test_folder = "bfs_instances"
+    for i in range(0, 5):
+        filepath = os.path.join(test_folder, f"BFS_TEST_{i}.txt")
         n, k, a = read_input(filepath)
 
         print(f"\nTest case {i}: n={n}, k={k}")
         
         results = []
 
-        #DYNAMIC
-        start = time.time()
-        sum_bellman = subset_sum_bellman(n, k, a)
-        end = time.time()
-        results.append(["Bellman DP", sum_bellman, f"{end - start:.6f}s"])
-        
         #BFS
         start = time.time()
         sum_bfs = subset_sum_bfs_pruned(n, k, a)
         end = time.time()
         results.append(["BFS Pruned", sum_bfs, f"{end - start:.6f}s"])
+        print("\nAlgorithm Comparison:")
+        print(tabulate(results, headers=["Algorithm", "Subset Sum ≤ k", "Time"]))
+
+""" 
+        #DYNAMIC
+        start = time.time()
+        sum_bellman = subset_sum_bellman(n, k, a)
+        end = time.time()
+        results.append(["Bellman DP", sum_bellman, f"{end - start:.6f}s"])
+
+
+        
+ 
 
         #2-APX greedy
         start = time.time()
@@ -115,9 +131,8 @@ def run_tests():
             fptas_sum = subset_sum_fptas(n, k, a, epsilon)
             end = time.time()
             results.append([f"FPTAS (ε={epsilon})", fptas_sum, f"{end - start:.6f}s"])
+"""
 
-        print("\nAlgorithm Comparison:")
-        print(tabulate(results, headers=["Algorithm", "Subset Sum ≤ k", "Time"]))
 
 if __name__ == "__main__":
     run_tests()
